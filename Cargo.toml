@@ -29,6 +29,7 @@ uuid = { version = "1.11.0", features = ["v4", "fast-rng"] }
 base64 = "0.22.1"
 ring = "0.17.8"
 openssl = "0.10.68"
+anyhow = "1.0.95"
 
 [[example]]
 name = "account_api"

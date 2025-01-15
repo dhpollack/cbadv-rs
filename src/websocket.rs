@@ -8,6 +8,7 @@ use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
 
+use anyhow::Result as AnyhowResult;
 use futures::stream::{SplitSink, Stream};
 use futures::task::{noop_waker_ref, Context, Poll};
 use futures::{SinkExt, StreamExt};
@@ -444,24 +445,26 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `String` if the user returns an error within the action.
-    pub fn fetch_sync<F>(
+    pub fn fetch_sync<F, U>(
         &self,
         stream: &mut EndpointStream,
         limit: usize,
         mut action: F,
-    ) -> Result<(), String>
+    ) -> AnyhowResult<Vec<U>>
     where
-        F: FnMut(CbResult<Message>) -> Result<(), String>,
+        F: FnMut(CbResult<Message>) -> AnyhowResult<U>,
     {
         let mut count = 0;
+        let mut res: Vec<U> = Vec::new();
 
         while count <= limit || limit == usize::MAX {
             // Use poll_next to check for available messages without waiting.
             match Pin::new(&mut *stream).poll_next(&mut Context::from_waker(noop_waker_ref())) {
                 Poll::Ready(Some(message)) => {
                     // Process and add the message to the result vector if valid.
-                    if let Some(result) = Self::process_message(message) {
-                        action(result)?;
+                    if let Some(received) = Self::process_message(message) {
+                        let item = action(received)?;
+                        res.push(item);
                     }
 
                     count += 1;
@@ -473,7 +476,7 @@ impl WebSocketClient {
             }
         }
 
-        Ok(())
+        Ok(res)
     }
 
     /// Asynchronously fetches messages from the WebSocket stream with a limit on the number of messages to fetch.
@@ -489,17 +492,18 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `String` if the user returns an error within the action.
-    pub async fn fetch_async<F, Fut>(
+    pub async fn fetch_async<F, U, Fut>(
         &self,
         stream: &mut EndpointStream,
         limit: usize,
         mut action: F,
-    ) -> Result<(), String>
+    ) -> AnyhowResult<Vec<U>>
     where
         F: FnMut(CbResult<Message>) -> Fut,
-        Fut: Future<Output = Result<(), String>>,
+        Fut: Future<Output = AnyhowResult<U>>,
     {
         let mut count = 0;
+        let mut res: Vec<U> = Vec::new();
 
         while count <= limit || limit == usize::MAX {
             // Use poll_next to check for available messages without waiting.
@@ -507,7 +511,8 @@ impl WebSocketClient {
                 Poll::Ready(Some(message)) => {
                     // Process and add the message to the result vector if valid.
                     if let Some(result) = Self::process_message(message) {
-                        action(result).await?;
+                        let item = action(result).await?;
+                        res.push(item);
                     }
 
                     count += 1;
@@ -519,7 +524,7 @@ impl WebSocketClient {
             }
         }
 
-        Ok(())
+        Ok(res)
     }
 
     /// Waits for a token to be consumable for the correct bucket.

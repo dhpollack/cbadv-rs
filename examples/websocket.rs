@@ -14,29 +14,23 @@ use cbadv::types::CbResult;
 use cbadv::WebSocketClientBuilder;
 
 /// This is used to parse messages. It is passed to the `listen` function to pull Messages out of
-/// the stream.
-fn message_action(msg: CbResult<Message>) -> Result<(), String> {
-    let rcvd = match msg {
-        Ok(Message {
+/// the stream. You can do something with each message or return part of it that you want to work
+/// with later.
+fn message_action(msg: CbResult<Message>) -> anyhow::Result<Channel> {
+    // let's turn the CbResult into an anyhow::Result
+    match msg? {
+        Message {
             events: Events::Candles(candles_events),
             channel,
             ..
-        }) => {
+        } => {
             for ticker in candles_events {
                 println!("{ticker:?}");
             }
-            format!("this is a {channel:?} message")
+            Ok(channel)
         }
-        Ok(message) => format!(
-            "this is not a candles message it is a {:?} message",
-            message.channel
-        ), // Leverage Debug for all Message variants
-        Err(error) => format!("Error: {error}"), // Handle WebSocket errors
-    };
-
-    // Update the callback object's properties and log the message.
-    println!("{rcvd}\n");
-    Ok(())
+        message => Ok(message.channel), // Leverage Debug for all Message variants
+    }
 }
 
 #[tokio::main]
@@ -87,11 +81,22 @@ async fn main() {
 
     loop {
         // Fetch messages from the WebSocket stream.
-        let _ = client.fetch_sync(&mut stream, 100, |msg| {
+        let fetched = client.fetch_sync(&mut stream, 100, |msg| {
             count += 1;
             print!("{count}: ");
             message_action(msg)
         });
+
+        match fetched {
+            Ok(results) => {
+                for channel in results {
+                    println!("{channel:?}");
+                }
+            }
+            Err(e) => {
+                eprintln!("Do something with: {e}");
+            }
+        }
 
         // Calculate the time since the last tick and sleep for the remaining time to hit the tick rate.
         let last_tick_ms = last_tick.elapsed().as_millis();
