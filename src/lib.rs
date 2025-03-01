@@ -40,7 +40,6 @@ pub(crate) mod utils;
 pub mod apis;
 pub mod models;
 
-mod rest;
-mod websocket;
-pub use rest::{RestClient, RestClientBuilder};
-pub use websocket::{WebSocketClient, WebSocketClientBuilder};
+mod client;
+pub use client::adv::rest::{RestClient, RestClientBuilder};
+pub use client::adv::websocket::{WebSocketClient, WebSocketClientBuilder};

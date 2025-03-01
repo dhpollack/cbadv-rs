@@ -11,7 +11,7 @@ use std::process::exit;
 use tokio::sync::mpsc;
 
 use cbadv::config::{self, BaseConfig};
-use cbadv::models::websocket::{Channel, Message};
+use cbadv::models::adv::websocket::{Channel, Message};
 use cbadv::types::CbResult;
 use cbadv::WebSocketClientBuilder;
 

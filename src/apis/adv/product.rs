@@ -9,7 +9,7 @@ use crate::constants::products::{
 };
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::product::{
+use crate::models::adv::product::{
     Candle, CandlesWrapper, Product, ProductBidAskQuery, ProductBook, ProductBookQuery,
     ProductBookWrapper, ProductBooksWrapper, ProductCandleQuery, ProductListQuery,
     ProductTickerQuery, ProductsWrapper, Ticker,

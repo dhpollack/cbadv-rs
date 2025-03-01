@@ -10,7 +10,7 @@
 use std::process::exit;
 
 use cbadv::config::{self, BaseConfig};
-use cbadv::models::portfolio::{
+use cbadv::models::adv::portfolio::{
     PortfolioBreakdownQuery, PortfolioListQuery, PortfolioModifyRequest,
 };
 use cbadv::RestClientBuilder;

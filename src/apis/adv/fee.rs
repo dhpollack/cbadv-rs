@@ -6,7 +6,7 @@
 use crate::constants::fees::RESOURCE_ENDPOINT;
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::fee::{FeeTransactionSummaryQuery, TransactionSummary};
+use crate::models::adv::fee::{FeeTransactionSummaryQuery, TransactionSummary};
 use crate::traits::HttpAgent;
 use crate::types::CbResult;
 

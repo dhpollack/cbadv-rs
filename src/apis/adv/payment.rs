@@ -5,7 +5,7 @@
 use crate::constants::payments::RESOURCE_ENDPOINT;
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::payment::{PaymentMethod, PaymentMethodWrapper, PaymentMethodsWrapper};
+use crate::models::adv::payment::{PaymentMethod, PaymentMethodWrapper, PaymentMethodsWrapper};
 use crate::traits::{HttpAgent, NoQuery};
 use crate::types::CbResult;
 

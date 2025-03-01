@@ -7,12 +7,12 @@ use crate::constants::products::CANDLE_MAXIMUM;
 use crate::constants::public::{PRODUCT_BOOK_ENDPOINT, RESOURCE_ENDPOINT, SERVERTIME_ENDPOINT};
 use crate::errors::CbError;
 use crate::http_agent::PublicHttpAgent;
-use crate::models::product::{
+use crate::models::adv::product::{
     Candle, CandlesWrapper, Product, ProductBook, ProductBookWrapper, ProductListQuery,
     ProductTickerQuery, ProductsWrapper, Ticker,
 };
-use crate::models::product::{ProductBookQuery, ProductCandleQuery};
-use crate::models::public::ServerTime;
+use crate::models::adv::product::{ProductBookQuery, ProductCandleQuery};
+use crate::models::adv::public::ServerTime;
 use crate::time::{self, Granularity};
 use crate::traits::{HttpAgent, NoQuery, Query};
 use crate::types::CbResult;

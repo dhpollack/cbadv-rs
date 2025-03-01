@@ -6,7 +6,7 @@
 use crate::constants::convert::{QUOTE_ENDPOINT, TRADE_ENDPOINT};
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::convert::{ConvertQuery, ConvertQuoteRequest, Trade, TradeWrapper};
+use crate::models::adv::convert::{ConvertQuery, ConvertQuoteRequest, Trade, TradeWrapper};
 use crate::traits::{HttpAgent, NoQuery};
 use crate::types::CbResult;
 

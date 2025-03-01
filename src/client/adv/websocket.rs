@@ -19,7 +19,7 @@ use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
 use crate::constants::websocket::{PUBLIC_ENDPOINT, SECURE_ENDPOINT};
 use crate::errors::CbError;
 use crate::jwt::Jwt;
-use crate::models::websocket::{
+use crate::models::adv::websocket::{
     Channel, Endpoint, EndpointStream, EndpointType, Message, SecureSubscription, Subscription,
     UnsignedSubscription, WebSocketEndpoints, WebSocketSubscriptions,
 };

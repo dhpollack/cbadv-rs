@@ -9,7 +9,7 @@
 use std::process::exit;
 use std::time::{Duration, Instant};
 
-use cbadv::models::websocket::{Channel, EndpointStream, Events, Message};
+use cbadv::models::adv::websocket::{Channel, EndpointStream, Events, Message};
 use cbadv::types::CbResult;
 use cbadv::WebSocketClientBuilder;
 

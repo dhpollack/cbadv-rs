@@ -7,7 +7,7 @@
 use std::process::exit;
 
 use cbadv::config::{self, BaseConfig};
-use cbadv::models::convert::{ConvertQuery, ConvertQuoteRequest};
+use cbadv::models::adv::convert::{ConvertQuery, ConvertQuoteRequest};
 use cbadv::RestClientBuilder;
 
 #[tokio::main]
@@ -43,9 +43,7 @@ async fn main() {
     };
 
     // Create a quote to convert USDC to USD.
-    println!(
-        "Creating a quote to convert {amount} {from_product} to {to_product}."
-    );
+    println!("Creating a quote to convert {amount} {from_product} to {to_product}.");
     let request = ConvertQuoteRequest::new(from_product, to_product, amount);
     let quote = match client.convert.create_quote(&request).await {
         Ok(q) => q,

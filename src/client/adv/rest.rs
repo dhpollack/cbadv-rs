@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 use futures::lock::Mutex;
 
-use crate::apis::{
+use crate::apis::adv::{
     AccountApi, ConvertApi, DataApi, FeeApi, OrderApi, PaymentApi, PortfolioApi, ProductApi,
     PublicApi,
 };

@@ -5,7 +5,7 @@
 use crate::constants::data::KEY_PERMISSIONS_ENDPOINT;
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::data::KeyPermissions;
+use crate::models::adv::data::KeyPermissions;
 use crate::traits::{HttpAgent, NoQuery};
 use crate::types::CbResult;
 

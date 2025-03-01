@@ -6,7 +6,7 @@
 use crate::constants::portfolios::{MOVE_FUNDS_ENDPOINT, RESOURCE_ENDPOINT};
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::portfolio::{
+use crate::models::adv::portfolio::{
     Portfolio, PortfolioBreakdown, PortfolioBreakdownQuery, PortfolioBreakdownWrapper,
     PortfolioListQuery, PortfolioModifyRequest, PortfolioMoveFundsRequest, PortfolioWrapper,
     PortfoliosWrapper,

@@ -44,7 +44,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy);
     /// ```
     pub fn new(product_id: &str, side: OrderSide) -> Self {
@@ -75,7 +75,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderType, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderType, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .order_type(OrderType::Limit);
     /// ```
@@ -93,7 +93,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, TimeInForce, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, TimeInForce, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .time_in_force(TimeInForce::GoodUntilCancelled);
     /// ```
@@ -111,7 +111,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .base_size(0.5);
     /// ```
@@ -129,7 +129,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .quote_size(1000.0);
     /// ```
@@ -147,7 +147,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .limit_price(50000.0);
     /// ```
@@ -165,7 +165,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .stop_price(48000.0);
     /// ```
@@ -183,7 +183,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .stop_trigger_price(47000.0);
     /// ```
@@ -201,7 +201,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .end_time("2024-12-31T23:59:59Z");
     /// ```
@@ -219,7 +219,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .post_only(true);
     /// ```
@@ -237,7 +237,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide, StopDirection};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide, StopDirection};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .stop_direction(StopDirection::StopUp);
     /// ```
@@ -255,7 +255,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .client_order_id("my-custom-order-id-123");
     /// ```
@@ -273,7 +273,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide};
     /// let builder = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .preview(true);
     /// ```
@@ -301,7 +301,7 @@ impl OrderCreateBuilder {
     /// # Example
     ///
     /// ```rust
-    /// use cbadv::models::order::{OrderCreateBuilder, OrderSide, OrderType, TimeInForce};
+    /// use cbadv::models::adv::order::{OrderCreateBuilder, OrderSide, OrderType, TimeInForce};
     /// let create_order = OrderCreateBuilder::new("BTC-USD", OrderSide::Buy)
     ///     .order_type(OrderType::Limit)
     ///     .time_in_force(TimeInForce::GoodUntilCancelled)

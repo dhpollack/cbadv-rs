@@ -9,7 +9,7 @@ use crate::constants::orders::{
 };
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::order::{
+use crate::models::adv::order::{
     Order, OrderCancelRequest, OrderCancelResponse, OrderCancelWrapper, OrderClosePositionRequest,
     OrderCreatePreview, OrderCreateRequest, OrderCreateResponse, OrderEditPreview,
     OrderEditRequest, OrderEditResponse, OrderListFillsQuery, OrderListQuery, OrderStatus,

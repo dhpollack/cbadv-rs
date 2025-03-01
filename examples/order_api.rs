@@ -13,7 +13,7 @@ use std::thread;
 use std::time::Duration;
 
 use cbadv::config::{self, BaseConfig};
-use cbadv::models::order::{
+use cbadv::models::adv::order::{
     OrderCancelRequest, OrderCreateBuilder, OrderCreateRequest, OrderEditRequest, OrderListQuery,
     OrderSide, OrderStatus, OrderType, TimeInForce,
 };

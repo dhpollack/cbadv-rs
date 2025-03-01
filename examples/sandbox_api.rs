@@ -11,7 +11,7 @@
 use std::process::exit;
 
 use cbadv::config::{self, BaseConfig};
-use cbadv::models::order::{
+use cbadv::models::adv::order::{
     OrderCreateBuilder, OrderEditRequest, OrderSide, OrderType, TimeInForce,
 };
 use cbadv::RestClientBuilder;

@@ -6,7 +6,7 @@
 use crate::constants::accounts::{LIST_ACCOUNT_MAXIMUM, RESOURCE_ENDPOINT};
 use crate::errors::CbError;
 use crate::http_agent::SecureHttpAgent;
-use crate::models::account::{Account, AccountListQuery, AccountWrapper, PaginatedAccounts};
+use crate::models::adv::account::{Account, AccountListQuery, AccountWrapper, PaginatedAccounts};
 use crate::traits::{HttpAgent, NoQuery};
 use crate::types::CbResult;
 
