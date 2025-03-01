@@ -4,6 +4,7 @@
 //! Many parts of the REST API suggest using websockets instead due to ratelimits and being quicker
 //! for large amount of constantly changing data.
 
+use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -16,6 +17,7 @@ use tokio::sync::Mutex;
 use tokio_tungstenite::tungstenite::{Error as WsError, Message as WsMessage};
 use tokio_tungstenite::{connect_async, MaybeTlsStream, WebSocketStream};
 
+use crate::client::traits::WebSocketClientTrait;
 use crate::constants::websocket::{PUBLIC_ENDPOINT, SECURE_ENDPOINT};
 use crate::errors::CbError;
 use crate::jwt::Jwt;
@@ -56,6 +58,7 @@ pub struct WebSocketClientBuilder {
     max_retries: u32,
     public_bucket: Arc<Mutex<TokenBucket>>,
     secure_bucket: Arc<Mutex<TokenBucket>>,
+    uris: HashMap<EndpointType, String>,
 }
 
 impl Default for WebSocketClientBuilder {
@@ -74,6 +77,10 @@ impl Default for WebSocketClientBuilder {
                 RateLimits::max_tokens(false, false),
                 RateLimits::refresh_rate(false, false),
             ))),
+            uris: HashMap::from([
+                (EndpointType::Public, PUBLIC_ENDPOINT.to_string()),
+                (EndpointType::User, SECURE_ENDPOINT.to_string()),
+            ]),
         }
     }
 }
@@ -183,6 +190,7 @@ impl WebSocketClientBuilder {
             enable_user: self.use_user,
             max_retries: self.max_retries,
             subscriptions: Arc::new(Mutex::new(WebSocketSubscriptions::new())),
+            uris: self.uris,
         })
     }
 }
@@ -207,6 +215,8 @@ pub struct WebSocketClient {
     pub(crate) max_retries: u32,
     /// Tracked subscriptions.
     pub(crate) subscriptions: Arc<Mutex<WebSocketSubscriptions>>,
+    /// URIs for endpoints
+    pub(crate) uris: HashMap<EndpointType, String>,
 }
 
 impl Clone for WebSocketClient {
@@ -221,17 +231,18 @@ impl Clone for WebSocketClient {
             enable_user: self.enable_user,
             max_retries: self.max_retries,
             subscriptions: self.subscriptions.clone(),
+            uris: self.uris.clone(),
         }
     }
 }
 
-impl WebSocketClient {
+impl WebSocketClientTrait for WebSocketClient {
     /// Connects to the endpoints specified in the builder. This is required before subscribing to any channels.
     ///
     /// # Errors
     ///
     /// Returns a `CbError` if the WebSocket connection fails.
-    pub async fn connect(&self) -> CbResult<WebSocketEndpoints> {
+    async fn connect(&self) -> CbResult<WebSocketEndpoints> {
         let mut endpoints = WebSocketEndpoints::default();
 
         if self.enable_public {
@@ -251,7 +262,13 @@ impl WebSocketClient {
     async fn connect_endpoint(&self, endpoint_type: &EndpointType) -> CbResult<Endpoint> {
         match endpoint_type {
             EndpointType::Public => {
-                let (public_socket, _) = connect_async(PUBLIC_ENDPOINT).await.map_err(|why| {
+                let (public_socket, _) = connect_async(
+                    self.uris
+                        .get(endpoint_type)
+                        .expect("endpoint type uri not found"),
+                )
+                .await
+                .map_err(|why| {
                     CbError::BadConnection(format!(
                         "Unable to establish public WebSocket connection: {why}",
                     ))
@@ -264,7 +281,13 @@ impl WebSocketClient {
                 Ok(Endpoint::Public((EndpointType::Public, stream)))
             }
             EndpointType::User => {
-                let (secure_socket, _) = connect_async(SECURE_ENDPOINT).await.map_err(|why| {
+                let (secure_socket, _) = connect_async(
+                    self.uris
+                        .get(endpoint_type)
+                        .expect("endpoint type uri not found"),
+                )
+                .await
+                .map_err(|why| {
                     CbError::BadConnection(format!(
                         "Unable to establish secure user WebSocket connection: {why}",
                     ))
@@ -346,9 +369,9 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `CbError` if the WebSocket connection fails.
-    pub async fn reconnect<E>(&mut self, stream: E) -> CbResult<WebSocketEndpoints>
+    async fn reconnect<E>(&mut self, stream: E) -> CbResult<WebSocketEndpoints>
     where
-        E: Into<EndpointStream>,
+        E: Into<EndpointStream> + Send,
     {
         let mut new_endpoints = WebSocketEndpoints::default();
 
@@ -399,7 +422,7 @@ impl WebSocketClient {
     ///
     /// * `endpoints` - A single `Endpoint` or multiple `WebSocketEndpoints`.
     /// * `callback` - The asynchronous closure to invoke on each message.
-    pub async fn listen<E, F, Fut>(&mut self, endpoints: E, mut callback: F)
+    async fn listen<E, F, Fut>(&mut self, endpoints: E, mut callback: F)
     where
         E: Into<EndpointStream>,
         F: FnMut(CbResult<Message>) -> Fut + Send + 'static,
@@ -444,7 +467,7 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `String` if the user returns an error within the action.
-    pub fn fetch_sync<F>(
+    fn fetch_sync<F>(
         &self,
         stream: &mut EndpointStream,
         limit: usize,
@@ -489,7 +512,7 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `String` if the user returns an error within the action.
-    pub async fn fetch_async<F, Fut>(
+    async fn fetch_async<F, Fut>(
         &self,
         stream: &mut EndpointStream,
         limit: usize,
@@ -541,7 +564,7 @@ impl WebSocketClient {
     /// # Arguments
     ///
     /// * `message` - The WebSocket message to process.
-    pub fn process_message(message: Result<WsMessage, WsError>) -> Option<CbResult<Message>> {
+    fn process_message(message: Result<WsMessage, WsError>) -> Option<CbResult<Message>> {
         match message {
             Ok(msg) => match msg {
                 WsMessage::Text(data) => {
@@ -659,7 +682,7 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `CbError` if the public or secure user connection is not enabled.
-    pub async fn subscribe(&mut self, channel: &Channel, product_ids: &[String]) -> CbResult<()> {
+    async fn subscribe(&mut self, channel: &Channel, product_ids: &[String]) -> CbResult<()> {
         let route = &get_channel_endpoint(channel);
         match route {
             EndpointType::Public if !self.enable_public => {
@@ -699,7 +722,7 @@ impl WebSocketClient {
     /// # Errors
     ///
     /// Returns a `CbError` if the public or secure user connection is not enabled.
-    pub async fn unsubscribe(&mut self, channel: &Channel, product_ids: &[String]) -> CbResult<()> {
+    async fn unsubscribe(&mut self, channel: &Channel, product_ids: &[String]) -> CbResult<()> {
         let route = &get_channel_endpoint(channel);
         match route {
             EndpointType::Public if !self.enable_public => {

@@ -14,6 +14,7 @@ use cbadv::config::{self, BaseConfig};
 use cbadv::models::adv::websocket::{Channel, Message};
 use cbadv::types::CbResult;
 use cbadv::WebSocketClientBuilder;
+use cbadv::WebSocketClientTrait;
 
 /// Example of an object with an attached callback function for messages.
 struct CallbackObject {
