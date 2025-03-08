@@ -30,6 +30,7 @@ base64 = "0.22.1"
 ring = "0.17.8"
 openssl = "0.10.68"
 trait-variant = "0.1.2"
+async-trait = "0.1.86"
 
 [[example]]
 name = "account_api"

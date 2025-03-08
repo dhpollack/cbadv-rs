@@ -11,7 +11,7 @@ use std::time::{Duration, Instant};
 
 use cbadv::models::adv::websocket::{Channel, EndpointStream, Events, Message};
 use cbadv::types::CbResult;
-use cbadv::WebSocketClientBuilder;
+use cbadv::{WebSocketClientBuilder, WebSocketClientTrait};
 
 /// This is used to parse messages. It is passed to the `listen` function to pull Messages out of
 /// the stream.

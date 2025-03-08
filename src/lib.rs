@@ -43,5 +43,4 @@ pub mod models;
 mod client;
 pub use client::adv::rest::{RestClient, RestClientBuilder};
 pub use client::adv::websocket::{WebSocketClient, WebSocketClientBuilder};
-pub use client::traits::WebSocketClientTrait;
-
+pub use client::traits::{WebSocketClientAsyncTrait, WebSocketClientTrait};
