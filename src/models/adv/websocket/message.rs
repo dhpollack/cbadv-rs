@@ -8,7 +8,7 @@ pub struct Message {
     /// The channel the message is from.
     pub channel: Channel,
     /// The client ID for the message.
-    pub client_id: String,
+    pub client_id: Option<String>,
     /// The timestamp for the message.
     pub timestamp: String,
     /// The sequence number for the message
@@ -26,7 +26,6 @@ mod tests {
         let data = r#"
             {
                 "channel":"heartbeats",
-                "client_id":"",
                 "timestamp":"2025-01-14T22:11:18.791273556Z",
                 "sequence_num":17,
                 "events":
